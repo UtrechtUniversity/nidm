@@ -1,0 +1,96 @@
+<header class="nidm"></header>
+
+<%= if @user do %>
+
+    <div class="body">
+
+    <section class="phx-hero exit">
+        <h1>Questionnaire</h1>
+    </section>
+
+    <%= form_for @changeset, Routes.exit_path(@conn, :update, @questions), fn f -> %>
+    
+        <fieldset class="exit">
+            <p>1. What is your age?</p>
+            <%= select f, :q_age, 18..100 %>
+            <%= error_tag f, :q_age %>
+        </fieldset>
+
+        <fieldset class="exit">
+            <p>2. What is your gender?</p>
+            <span class="radio"><%= radio_button f, :q_gender, 1 %><label>female</label></span>
+            <span class="radio"><%= radio_button f, :q_gender, 2 %><label>male</label></span>
+            <span class="radio"><%= radio_button f, :q_gender, 3 %><label>other</label></span>
+            <%= error_tag f, :q_gender %>
+        </fieldset>
+
+        <fieldset class="exit">
+            <p>3. What is your mother tongue?</p>
+            <span class="radio"><%= radio_button f, :q_mtongue, 1 %><label>English</label></span>
+            <span class="radio"><%= radio_button f, :q_mtongue, 2 %><label>other</label></span>
+            <%= error_tag f, :q_mtongue %>
+        </fieldset>
+
+        <fieldset class="exit">
+            <p>4. What is your highest completed level of education?</p>
+            <span class="radio"><%= radio_button f, :q_edu, 1 %><label>No formal education</label></span>
+            <span class="radio"><%= radio_button f, :q_edu, 2 %><label>Primary school (elementary education)</label></span>
+            <span class="radio"><%= radio_button f, :q_edu, 3 %><label>Lower secondary (secondary completed does not allow entry to university: obligatory school)</label></span>
+            <span class="radio"><%= radio_button f, :q_edu, 4 %><label>Upper secondary (programs that allows entry to university)</label></span>
+            <span class="radio"><%= radio_button f, :q_edu, 5 %><label>Post secondary, non-tertiary (other upper secondary programs toward labor market or technical formation)</label></span>
+            <span class="radio"><%= radio_button f, :q_edu, 6 %><label>Lower level tertiary, first stage (also technical schools at a tertiary level)</label></span>
+            <span class="radio"><%= radio_button f, :q_edu, 7 %><label>Upper level tertiary (Master, Doctor)</label></span>
+            <span class="radio"><%= radio_button f, :q_edu, 8 %><label>No answer</label></span>
+            <%= error_tag f, :q_edu %>
+        </fieldset>
+
+        <fieldset class="exit">
+            <p>5. What is your country of residence?</p>
+            <%
+                countries = Enum.sort(Countries.all, &(&1.name < &2.name))
+                options = Enum.map(countries, &{&1.name, &1.country_code})
+            %>
+            <%= select f, :q_residence, options, prompt: "-- Please select --" %>
+            <%= error_tag f, :q_residence %>
+        </fieldset>
+
+        <fieldset class="exit">
+            <p>6. How concerned were/are you to attract COVID-19?</p>
+            <span class="radio"><%= radio_button f, :q_c19_concern, 1 %><label>very</label></span>
+            <span class="radio"><%= radio_button f, :q_c19_concern, 2 %><label>a bit</label></span>
+            <span class="radio"><%= radio_button f, :q_c19_concern, 3 %><label>hardly</label></span>
+            <span class="radio"><%= radio_button f, :q_c19_concern, 4 %><label>not at all</label></span>
+            <%= error_tag f, :q_c19_concern %>
+        </fieldset>
+
+        <fieldset class="exit">
+            <p>7. Did you get COVID-19?</p>
+            <span class="radio"><%= radio_button f, :q_c19_positive, 1 %><label>yes</label></span>
+            <span class="radio"><%= radio_button f, :q_c19_positive, 0 %><label>no</label></span>
+            <%= error_tag f, :q_c19_positive %>
+        </fieldset>
+
+        <fieldset class="exit">
+            <p>8. Remarks</p>
+            <%= textarea(f, :q_remarks) %>
+        </fieldset>
+
+        <fieldset>
+            <%= submit "Submit", class: "button" %>
+        </fieldset>
+    <% end %>
+
+
+    </div>
+
+<% end %>
+
+
+
+
+
+
+
+
+
+

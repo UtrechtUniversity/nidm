@@ -1,0 +1,5 @@
+<main role="main" class="regular">
+    <div class="regular">
+        <%= @inner_content %>
+    </div>
+</main>

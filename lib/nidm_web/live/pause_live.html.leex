@@ -1,0 +1,24 @@
+<header class="nidm"></header>
+
+<div class="regular">
+    <div class="body">
+
+        <%
+            message = case @status do
+                "warm_up" -> "Starting with a 3 round warm-up"
+                _ ->
+                    case @condition do
+                        :clustered -> "Starting with network B"
+                        :unclustered -> "Starting with network A"
+                        :test -> "Playing network C"
+                        :big_test -> "Playing network D"
+                    end
+            end
+        %>
+
+        <section id="announcement" class="phx-hero">
+            <h1><%= message %></h1>
+        </section>
+
+    </div>
+</div>

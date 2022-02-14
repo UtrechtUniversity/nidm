@@ -1,0 +1,68 @@
+<header class="nidm">
+    <div id="game-status" class="row">
+
+        <div id="left" class="column column-60">
+            <div class="left">
+            </div>
+        </div>
+
+        <div id="right" class="column column-40">
+            <div class="left">
+                <% 
+                    prev = case is_integer(@user.prev_earned_points) do
+                        true -> "$#{@user.prev_earned_points}"
+                        false -> "-"
+                    end
+                %>
+                <%= card "Earnings last round", prev %>
+                <%= card "Total Earnings", round(@user.earned_points / 5) %>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<div class="body">
+    <table class="fade-in">
+        <thead>
+            <tr><th colspan="3">What do you prefer?</th></tr>
+        </thead>
+
+        <tbody>
+            <tr>
+            <td>Option A:</td>
+            <td>
+                a 50.0% chance of winning $300.00 and <br>
+                a 50.0% chance of winning $0.00
+            </td>
+            <td>
+                <%= form_for @risk_changeset, "/task1/#{@question.id}", [method: :put, as: :question], fn f -> %>
+                <%= hidden_input f, @column, value: "A" %>
+                <%= submit "Option A", type: "submit", id: "A", value: "A" %>
+                <% end %>
+            </td>
+            </tr>
+            <tr>
+            <td>Option B:</td>
+            <td>
+                an amount of $<%= @option_b %> as a sure payment
+            </td>
+            <td>
+                <%= form_for @risk_changeset, "/task1/#{@question.id}", [method: :put, as: :question], fn f -> %>
+                <%= hidden_input f, @column, value: "B" %>
+                <%= hidden_input f, :b_money, value: @option_b %>
+                <%= submit "Option B", type: "submit", id: "B", value: "B" %>
+                <% end %>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+
+

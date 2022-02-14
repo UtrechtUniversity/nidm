@@ -1,0 +1,35 @@
+<header class="nidm"></header>
+
+<div class="body">
+
+    <section class="phx-hero">
+    <h1>Instructions</h1>
+    </section>
+
+    <section id="instructions" class="welcome">
+
+        <h2>Part 1</h2>
+
+        <p>In part 1 of the experiment, you  will be confronted with a 
+        series of five situations. Each situation requires you to choose 
+        between two options. One option is to accept a sure payment of a 
+        particular number of points. The second option is to gamble with 
+        a 50:50 chance of getting 300 points or getting nothing. 
+        Realize that you will get paid according to your choice, 
+        and if you decide to gamble, the outcome indeed depends on a 
+        random flip of a coin which is executed by the computer.</p>
+
+        <p>The number of points you earn for part 1 is the average number 
+        of points related to the five decisions you made (score of each  
+        situation  divided by five).</p>
+
+        <p>Please click “continue” to proceed with part 1 of the experiment.</p>
+
+
+    </section>
+
+    <div class="go-button">
+    <%= link "Continue", to: "/task1/#{@id}/edit", id: "read-instructions", class: "button" %>
+    </div>
+
+</div>

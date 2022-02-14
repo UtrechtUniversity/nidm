@@ -1,0 +1,49 @@
+<header class="nidm"></header>
+
+<%= if @user do %>
+
+    <%
+        pounds = Float.round(((@user.earned_points || 0) / 500), 2)
+        euros = Float.round(pounds * 1.17, 2)
+    %>
+
+    <div class="body">
+        <section class="phx-hero exit">
+            <h1>Thank you</h1>
+            <%= if @old_status == "flushed" do %>
+                <p>Dear participant,</p>
+
+                <p class="left-align">thank you for participating in the academic study 
+                “Progression of epidemics in a networking game”! As 
+                explained in the instructions, participants are assigned 
+                to groups. This means that when not enough people show 
+                up to form a group of 60, not everybody gets to 
+                participate.</p>
+                <p class="left-align">Unfortunately, you could not be assigned to a group.</p>
+                <p class="left-align">The minimum payment as announced in the study will be 
+                transferred to you shortly. Please make sure to 
+                exit the study by clicking the “Back to Prolific” button 
+                below.</p>
+
+            <% else %>
+
+                <p>Dear participant,</p>
+
+                <p class="left-align">thank you for participating in the academic study 
+                “Progression of epidemics in a networking game”! Your final 
+                score is <%= @user.earned_points %>. Your payment will be processed 
+                and transferred to you shortly. Please make sure to exit the study 
+                by clicking the “Back to Prolific” button below.</p>
+
+            <% end %>
+
+            <p>Kind regards,</p>
+            <p>Hendrik Nunner</p>
+
+            <p><a href="<%= @user.redirect_url %>" class="button">
+            Back to Prolific</a></p>
+
+        </section>
+    </div>
+
+<% end %>

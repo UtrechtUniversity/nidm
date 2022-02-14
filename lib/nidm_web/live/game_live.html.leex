@@ -1,0 +1,233 @@
+<header class="nidm">
+
+    <div class="row">
+
+        <div id="left" class="column column-60">
+            <div class="left">
+                <%
+                    network = case @status do
+                        "warm_up" -> "-"
+                        _ ->
+                            case @condition do
+                                :clustered -> "B"
+                                :unclustered -> "A"
+                                :test -> "C"
+                                :big_test -> "D"
+                            end
+                    end
+                %>
+                <%= card "Game", network %>
+                <%= card "Round", @round + 1%>
+                <%= card "Your node", @node %>
+                <%= card "Relations", Enum.count(@friends) %>
+                <div id="timer">
+                    <svg id="countdown-svg" width="100" height="100" xmlns="http://www.w3.org/2000/svg" phx-hook="Countdown">
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div id="right" class="column column-40">
+            <div class="right">
+                <div id="modal-button">
+                    <button
+                        phx-click="open-modal"
+                        phx-target="#instr-modal"
+                        type="button"
+                        class="button">Instructions
+                    </button>
+                </div>
+                <%
+                    points = case @round == 0 do
+                        true -> "-"
+                        false -> @earned_points
+                    end
+                %>
+                <%= card "Earnings last round", points %>
+                <%= card "Total Earnings", @total_points %>
+            </div>
+        </div>
+
+    </div>
+
+</header>
+
+
+<section id="friends">
+    <h3>Your relations:</h3>
+    <%= for n <- sort_nodes(@friends) do %>
+        <label class="node <%= @health[n] %>">Node <%= n %></label>
+    <% end %>
+</section>
+
+
+<div id="the-game" class="row" data-round="<%= @round %>">
+
+    <div id="graph-column" phx-update="ignore" class="column column-67">
+
+        <div id="graph" phx-hook="Graph"></div>
+
+    </div>
+
+
+    <div class="column column-33">
+
+        <div id="create-break-friendships" class="friendships">
+            <h3 class="with-stripe">Relations you want to keep (uncheck to break):</h3>
+
+            <div class="nodes">
+                <%= for n <- sort_nodes(@possible_breakups) do %>
+                    <%= node_checkbox n, "create-break-friendship", "friend", true, "friend #{ @health[n]}" %>
+                <% end %>
+            </div>
+
+            <h3 class="with-stripe">Create relations with:</h3>
+
+            <div class="nodes">
+                <%= for n <- sort_nodes(@introductions) do %>
+                    <%= node_checkbox n, "create-break-friendship", "friend", false, "introduction #{ @health[n]}" %>
+                <% end %>
+            </div>
+
+        </div>
+
+        <div id="accept-friendships" class="friendships">
+            <h3 class="with-stripe">Accept relations with:</h3>
+
+            <div class="nodes">
+                <%= for n <- sort_nodes(@friendship_requests) do %>
+                    <%= node_checkbox n, "accept-friendship", "sending_node", false, "acceptance #{ @health[n]}" %>
+                <% end %>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<%= live_component @socket, NidmWeb.Components.Modal, id: "instr-modal" do %>
+        <p class="right"><button phx-click="close-modal" phx-target="#instr-modal" class="button">Close</button></p>
+        <div class="">
+
+            <h3>Disease transmission</h3>
+            <p>The probability of getting infected depends on the number of
+            infected (red) nodes with whom you are connected:</p>
+            <table id="infections"><thead>
+            <tr>
+            <th>infectious neighbors</th>
+            <th>0</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9</th>
+            <th>10</th>
+            </tr></thead>
+            <tbody><tr>
+            <td>chance of getting infected</td>
+            <td>0.00</td>
+            <td>0.15</td>
+            <td>0.28</td>
+            <td>0.39</td>
+            <td>0.48</td>
+            <td>0.56</td>
+            <td>0.62</td>
+            <td>0.68</td>
+            <td>0.73</td>
+            <td>0.77</td>
+            <td>0.80</td>
+            </tr></tbody></table>
+            <p>Infected nodes turn red (including your own node) and remain
+            infected for 4 consecutive rounds. After 4 rounds, infected nodes
+            turn green (including your own node), become immune, and can
+            therefore not get infected again.</p>
+            <%
+                game_letter = case @condition == :clustered do
+                    true -> "B"
+                    false -> "A"
+                end
+            %>
+            <h3>
+                Earning points in Game <%= game_letter %>
+            </h3>
+            <p>How many points you earn depends on three things:</p>
+            <ol>
+            <li><strong>Your relations:</strong> The number of points you
+            can earn depends on the number of relations you have. Six
+            relations is optimal. Fewer or more relations will result in fewer points.
+
+                <table id="infections"><thead>
+                    <tr>
+                    <th>number of relations</th>
+                    <th>0</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>5</th>
+                    <th>6</th>
+                    <th>7</th>
+                    <th>8</th>
+                    <th>9</th>
+                    <th>10</th>
+                    <th>11</th>
+                    <th>12</th>
+                    <th>13</th>
+                    <th>..</th>
+                    </tr></thead>
+                    <tbody><tr>
+                    <td>points earned per round</td>
+                    <td>0</td>
+                    <td>31</td>
+                    <td>56</td>
+                    <td>75</td>
+                    <td>89</td>
+                    <td>97</td>
+                    <td>100</td>
+                    <td>97</td>
+                    <td>89</td>
+                    <td>75</td>
+                    <td>56</td>
+                    <td>31</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>..</td>
+                    </tr></tbody></table>
+            </li>
+
+            <li><strong>Relations between nodes connected to you:</strong>
+            <%= if @condition == :clustered do %>
+                You will be awarded 20 additional points if you are
+                connected to 5 other nodes that all have relations among
+                each other as well, while you have one relation to another
+                node not in this group. If your connections have fewer
+                relations among each other, you lose some of these 20
+                points.
+            <% else  %>
+                You will be awarded 20 additional points if there are no
+                relations between any of the nodes you are connected to.
+                For each relation between these nodes, you will lose some
+                of these 20 points.
+            <% end  %>
+                <figure style="text-align: center;">
+                    <img src="/images/triads.jpg" alt="Node connections" style="width:85%">
+                    <figcaption style="padding: 0 5rem;">Figure 1: (I.) No relation between the connections of
+                        node 1. (II.) One relation between the connections (2 and 3)
+                        of node 1, while one connection (4) is to a node not in this
+                        group.</figcaption>
+                </figure>
+            </li>
+            <li>
+            <strong>Having the disease:</strong> 14 points will be deducted from
+            the points you earn from your relations for each round that you are
+            infected.
+            </li>
+
+        </ol>
+        </div>
+        <p class="right"><button phx-click="close-modal" phx-target="#instr-modal" class="button">Close</button></p>
+<% end %>

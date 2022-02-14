@@ -1,0 +1,101 @@
+<div class="row admin">
+
+    <div class="column column-60">
+
+        <div id="queue">
+            <%= for [key, value] <- @gate do %>
+                <%= card("Queue #{key + 1}", value) %>
+            <% end  %>
+            <%= card("Signed in", @signed_in || 0) %>
+            <div class="buttons">
+                <p><button class="button-red"
+                    phx-click="flush"
+                    data-confirm="Are you sure?">
+                        Flush Queue
+                    </button></p>
+                <p><button
+                    phx-click="export"
+                    data-confirm="Are you sure?">
+                        Export
+                    </button></p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Gamma</th>
+                    <th>Cond 1</th>
+                    <th>Cond 2</th>
+                    <th>Status</th>
+                    <th>Round</th>
+                    <th>Edges</th>
+                    <th>Connects</th>
+                    <th>Disconnects</th>
+                    <th>Infected</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%= for network_id <- @network_ids do %>
+                <%
+                    network = @networks[network_id]
+                    state = List.last(@network_states[network_id] || [])
+                %>
+                <tr id="network-<%= network.id %>">
+                    <td><%= network.name %></td>
+                    <td><%= network.gamma %></td>
+                    <td><%= network.condition_1 %></td>
+                    <td><%= network.condition_2 %></td>
+                    <td><%= network.status %></td>
+                    <td><%= if state, do: state.round + 1, else: "" %></td>
+                    <td><%= if state, do: state.edges, else: "" %></td>
+                    <td><%= if state, do: state.connects, else: "" %></td>
+                    <td><%= if state, do: state.disconnects, else: "" %></td>
+                    <td><%= if state, do: Kernel.round(state.infected / 10), else: "" %></td>
+                </tr>
+                <% end  %>
+            </tbody>
+        </table>
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Prolific PID</th>
+                    <th>Network</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Access Token</th>
+                    <th>Session</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%= for user_id <- @user_ids do %>
+                <% user = @users[user_id] %>
+                <tr id="<%= user.id %>">
+                    <td><%= user.prolific_pid %></td>
+                    <td><%= network_of_user(user, @networks) %></td>
+                    <td>user_<%= user.serial_number %></td>
+                    <td><%= user.status %></td>
+                    <td><%= user.access_token %></td>
+                    <td><%= user.session_id %></td>
+                </tr>
+                <% end  %>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div id="admin-graphs" class="column column-40" phx-hook="AdminCharts" phx-update="ignore">
+
+        <%= for network_id <- @network_ids do %>
+            <% n = @networks[network_id] %>
+            <h3 class="middle"><%= "#{n.name} : #{n.condition_1} : #{n.condition_2}"%></h3>
+            <canvas id="canvas-<%= network_id %>" class="network-status-chart" width="600" height="400"></canvas>
+        <% end %>
+
+    </div>
+
+
+</div>

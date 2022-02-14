@@ -1,0 +1,11 @@
+<div id="<%= @id %>">
+    <%= if @state == :open do %>
+    <div id="modal-wrapper" phx-hook="InitModal" phx-target="#<%= @id %>">
+
+        <div id="modal-body">
+            <%= render_block(@inner_block, modal_id: @id) %>
+        </div>
+
+    </div>
+    <% end %>
+</div>

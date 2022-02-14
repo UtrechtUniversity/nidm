@@ -1,0 +1,66 @@
+<header class="nidm"></header>
+
+<div class="body">
+
+    <section class="phx-hero">
+    <h1>Welcome</h1>
+    </section>
+
+    <section class="welcome">
+        <h2>Instructions</h2>
+
+        <p>You are now taking part in a decision-making experiment. Please 
+        read the following instructions carefully. They contain everything 
+        you need to know to participate in the experiment. The data for 
+        this study is collected and controlled by Hendrik Nunner of the 
+        Utrecht University Institute (EUI). If you have any questions, 
+        please email Hendrik Nunner at
+        <a href="mailto:h.nunner@uu.nl">h.nunner@uu.nl</a>.</p>
+
+        <p>During the experiment, you can earn points. These points will be converted 
+        at the end of the experiment at the exchange rate of:</p>
+        <p class="center"><strong>500 points = £1.00</strong></p>
+        <p>The number of points you earn depends on your own choices and the choices 
+        of other participants. Depending on your performance in the experiment, you 
+        will earn maximally £10.00. We will guarantee you a minimum payment 
+        of £5.00 per 60 minutes of your participation as required by Prolific, 
+        but if your earned points are beyond the minimum payment, you get the 
+        difference as your bonus. For example, if you earn 3000 points and the 
+        experiment takes 60 minutes, you earn £6.00: £5.00 for the minimum payment 
+        and £1.00 in addition as a bonus. The experiment will take a maximum of 100 
+        minutes (1 hour 40 minutes), probably less. It may happen that you cannot be 
+        assigned to a group to participate in the study. In that case, you will 
+        receive the minimum amount as announced on Prolific.</p>
+
+        <p>At the end of the experiment, you will be shown a message 
+        confirming your participation and a link redirecting you to 
+        Prolific when clicked on. Clicking this link is required to 
+        finalize your participation. Only when you completed all tasks 
+        and got redirected to Prolific, you will receive the money you 
+        earned during the experiment in your Prolific account.</p>
+
+        <p>Please note that you may at all times quit the study without 
+        any explanation or consequences.</p>
+
+        <%= form_for @signin_changeset, Routes.session_path(@conn, :create), [method: :post, as: :user], fn f -> %>
+
+            <%= hidden_input f, :id, value: @user.id %>
+            <%= hidden_input f, :agreed_personal_data, value: true %>
+            <%= hidden_input f, :agreed_terms, value: true %>
+
+            <p>Please click “continue” to proceed with the instructions.</p>
+
+            <p>
+                <%= submit "Continue", type: "submit", id: "go" %>
+            </p>
+
+        <% end %>
+
+    </section>
+
+</div>
+
+
+
+
+

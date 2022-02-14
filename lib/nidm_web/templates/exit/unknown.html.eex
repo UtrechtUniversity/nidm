@@ -1,0 +1,19 @@
+<header class="nidm"></header>
+
+<div class="body">
+
+    <%= if @user do %>
+
+    <section class="phx-hero exit">
+        <h1>Your access token isn't recognized</h1>
+    </section>
+    
+    <% else %>
+
+    <section class="phx-hero exit">
+        <h1>Your user account isn't recognized</h1>
+    </section>
+
+    <% end %>
+
+</div>

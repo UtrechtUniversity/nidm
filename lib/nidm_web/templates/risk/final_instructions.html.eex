@@ -1,0 +1,315 @@
+<header class="nidm">
+    <div id="game-status" class="row">
+
+        <div id="left" class="column column-60">
+            <div class="left">
+            </div>
+        </div>
+
+        <div id="right" class="column column-40">
+            <div class="left">
+                <%= card "Earnings last round", "$#{@user.prev_earned_points}" || "-" %>
+                <%= card "Total Earnings", @user.earned_points %>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+<div class="body">
+    <p class="alert alert-info" role="alert"><%= raw(get_flash(@conn, :info)) %></p>
+    <p class="alert alert-danger" role="alert"><%= raw(get_flash(@conn, :error)) %></p>
+
+
+    <section class="phx-hero">
+    <h1>Instructions</h1>
+    </section>
+    
+    <section id="instructions" class="welcome">
+
+    <h2>Part 2</h2>
+
+    <h3>Overview</h3>
+
+    <p>In part 2 of the experiment, you participate in two games. In each game, 
+        you are one person in a network of 60 participants. You are  displayed 
+        as a square on your  own screen. All other participants are shown as 
+        circles. We call your square and the circles of other participants  
+        “nodes”. Relations between participants are indicated as lines between 
+        the nodes. Each game consists of about 15 to 20 rounds. Before round 
+        1, a starting network is generated on the screen and one participant 
+        in the network will be infected with a (hypothetical) disease. The 
+        node of this participant will be colored red. Nodes that have relations 
+        with an infected (red) node can also get infected in subsequent rounds.
+    </p>
+
+    <h3>Game rounds</h3>
+
+    <p>Each game consists of about 15 to 20 rounds. Each round consists of 
+        4 stages.</p>
+
+    <p><strong>Stage 1:</strong> In this stage, nodes can get infected. In 
+        the first round, only one node is infected. In all other rounds, other 
+        nodes can get infected. The probability of getting infected depends on 
+        the number of red nodes with whom you are connected. If you are not 
+        connected with a red node, you cannot get infected. If you are 
+        connected to  1 red node, the probability of infection is 0.15 and 
+        increases for each additional infected node (see below). </p>
+
+    <table id="infections"><thead>
+    <tr>
+    <th>infectious neighbors</th>
+    <th>0</th>
+    <th>1</th>
+    <th>2</th>
+    <th>3</th>
+    <th>4</th>
+    <th>5</th>
+    <th>6</th>
+    <th>7</th>
+    <th>8</th>
+    <th>9</th>
+    <th>10</th>
+    </tr></thead>
+    <tbody><tr>
+    <td>chance of getting infected</td>
+    <td>0.00</td>
+    <td>0.15</td>
+    <td>0.28</td>
+    <td>0.39</td>
+    <td>0.48</td>
+    <td>0.56</td>
+    <td>0.62</td>
+    <td>0.68</td>
+    <td>0.73</td>
+    <td>0.77</td>
+    <td>0.80</td>
+    </tr></tbody></table>
+
+    <p>If you get infected, your node will also turn red, and you will stay 
+        infected for <strong>exactly 4 rounds</strong>. After these four 
+        rounds, your node will turn green, you will get immune, and you 
+        cannot get the disease anymore in this game. All other immune nodes 
+        will also be colored green.</p>
+
+    <p><strong>Stage 2:</strong> In stage 2, you can break relations or 
+        propose new relations in the network. There will be 12 nodes 
+        displayed on the right side of the screen, for which you can 
+        either choose to break the relation or to propose a new relation. 
+        The buttons to make the decisions are also colored (red if that 
+        node is infected with the disease, green if that node is immune 
+        and gray otherwise). Breaking relations you can decide yourself, 
+        but before you can establish a new relation, the other participant 
+        needs to agree on this relationship as well. You will have exactly 
+        60 seconds to make your decisions in this stage in each round. 
+        After that, the game proceeds automatically.</p>
+
+    <p><strong>Stage 3:</strong> In stage 3, you can indicate which relations 
+        that others have proposed to you, you indeed also would like to have. 
+        These are again displayed on the right side of the screen and colored 
+        as explained before. Other participants will simultaneously decide 
+        whether to accept your proposals.
+    </p>
+
+    <p><strong>Stage 4:</strong> In stage 4, your points for this round are 
+        calculated (see next section).</p>
+
+    <p>Note that stages 1 (disease transmission) and 4 (points computation) 
+        are done by the system and the outcomes will be presented as information 
+        on the screen (color of nodes, number of points). So in practice, you 
+        will move back and forth between stages 2 (breaking / proposing 
+        relations) and 3 (accepting proposed relations).</p>
+
+    <h3>Earning points</h3>
+
+    <p>How many points you earn depends on three things:</p>
+
+    <ol>
+    <li><strong>Your relations:</strong> If you have 0 relations, you earn 
+        0 points. The first relation earns you quite some points, the second 
+        a bit less, and so on until you can earn maximally 100 points for 6 
+        relations. If you have more than 6 relations, the number of points 
+        you earn will decrease again.
+
+        <table id="infections"><thead>
+            <tr>
+            <th>number of relations</th>
+            <th>0</th>
+            <th>1</th>
+            <th>2</th>
+            <th>3</th>
+            <th>4</th>
+            <th>5</th>
+            <th>6</th>
+            <th>7</th>
+            <th>8</th>
+            <th>9</th>
+            <th>10</th>
+            <th>11</th>
+            <th>12</th>
+            <th>13</th>
+            <th>..</th>
+            </tr></thead>
+            <tbody><tr>
+            <td>points earned per round</td>
+            <td>0</td>
+            <td>31</td>
+            <td>56</td>
+            <td>75</td>
+            <td>89</td>
+            <td>97</td>
+            <td>100</td>
+            <td>97</td>
+            <td>89</td>
+            <td>75</td>
+            <td>56</td>
+            <td>31</td>
+            <td>0</td>
+            <td>0</td>
+            <td>..</td>
+            </tr></tbody></table>
+
+    </li>
+
+    <li><strong>Relations between nodes connected to you:</strong> The two 
+        games you play will differ in how many points you earn based on the 
+        relations between your connections. The game you are playing will 
+        be indicated on the screen.
+    <ul>
+    <li><strong>Game A</strong> - You will be awarded 20 additional points if 
+        there are no relations between any of the nodes you are connected to. 
+        For each relation between these nodes, you will lose some of these 20 
+        points. </li>
+    <li><strong>Game B</strong> - You will be awarded 20 additional points 
+        if you are connected to 5 other nodes that all have relations among 
+        each other as well, while you have one relation to another node not 
+        in this group. If your connections have fewer relations among each 
+        other, you lose some of these 20 points.</li>
+    </ul>
+    <figure style="text-align: center;">
+        <img src="/images/triads.jpg" alt="Node connections" style="width:85%">
+        <figcaption style="padding: 0 5rem;">Figure 1: (I.) No relation between the connections of 
+            node 1. (II.) One relation between the connections (2 and 3) 
+            of node 1, while one connection (4) is to a node not in this 
+            group.</figcaption>
+    </figure>
+    </li>
+    <li>
+    <strong>Having the disease:</strong> 14 points will be deducted from 
+    the points you earn from your relations for each round that you are 
+    infected.
+    </li>
+
+    </ol>
+
+    <h3>User interface</h3>
+
+    <h4>Instructional video</h4>
+
+    <video width="750" height="540" controls>
+        <source src="/images/nidm.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+        <a href="/images/nidm.mp4">Download MP4</a>
+    </video>
+
+
+    <h3 style="margin-top:5rem;">Overview of the user interface for severing and proposing ties</h3>
+    <img src="/images/ui-stage1.png" />
+
+
+    <h3 style="margin-top:5rem;">Overview of the user interface for accepting tie proposals</h3>
+    <img src="/images/ui-stage2.png" />
+
+    <h3>Final notes</h3>
+
+    <p>We will first run a trial game with 3 rounds, in which you can 
+    try out the interface. You do not earn anything in the trial game, 
+    but you can get a feel for the game and experience how you earn points. 
+    After that, we start with the first paid game.</p>
+
+    <p>If you have questions or do not understand something, please email 
+    the main researcher Hendrik Nunner at <a href="mailto:h.nunner@uu.nl">h.nunner@uu.nl</a>. 
+    Otherwise, click the continue button on the screen.</p>
+
+    <p>A small number of people have experienced a flickering in the user 
+    interface. When it happens too often, please resize/refresh your browser 
+    or copy-paste the URL into a new tab.</p>
+
+    <h3>Please answer the following questions to continue:</h3>
+
+    <%= form_for @changeset, "/final_instructions", [as: :answers, method: :get], fn f -> %>
+    
+    <fieldset class="instruction-questions">
+        <p>1. What is the optimal number of ties in Game B?</p>
+        <ul>
+            <li><%= radio_button f, :q_1, "a" %><label>2</label></li>
+            <li><%= radio_button f, :q_1, "b" %><label>4</label></li>
+            <li><%= radio_button f, :q_1, "c" %><label>5</label></li>
+            <li><%= radio_button f, :q_1, "d" %><label>6</label></li>
+            <li><%= radio_button f, :q_1, "e" %><label>8</label></li>
+        </ul>
+        <%= error_tag f, :q_1 %>
+    </fieldset>
+
+    <fieldset class="instruction-questions">
+        <p>2. What is the special feature of Game A?</p>
+        <ul>
+            <li><%= radio_button f, :q_2, "a" %>
+            <label>You are immune to the disease from the start of the game.</label></li>
+            <li><%= radio_button f, :q_2, "b" %>
+            <label>You get additional points for being connected to infectious nodes.</label></li>
+            <li><%= radio_button f, :q_2, "c" %>
+            <label>You are offered less nodes per round to change your relations.</label></li>
+            <li><%= radio_button f, :q_2, "d" %>
+            <label>You are more likely to catch the disease, because it is more contageous.</label></li>
+            <li><%= radio_button f, :q_2, "e" %>
+            <label>You get additional points if there are no relations between any of the nodes you are connected to.</label></li>
+        </ul>
+        <%= error_tag f, :q_2 %>
+    </fieldset>
+
+    <fieldset class="instruction-questions">
+        <p>3. What happens in stage 3 of a game round?</p>
+        <ul>
+            <li><%= radio_button f, :q_3, "a" %>
+            <label>The points of the round are being computed.</label></li>
+            <li><%= radio_button f, :q_3, "b" %>
+            <label>You can break relations to other participants.</label></li>
+            <li><%= radio_button f, :q_3, "c" %>
+            <label>Diseases may be transmitted between connected nodes.</label></li>
+            <li><%= radio_button f, :q_3, "d" %>
+            <label>You can accept relation proposals from other participants.</label></li>
+            <li><%= radio_button f, :q_3, "e" %>
+            <label>None of the above.</label></li>
+        </ul>
+        <%= error_tag f, :q_3 %>
+    </fieldset>
+
+    <fieldset class="instruction-questions">
+        <p>4. What cannot be found on the user interface?</p>
+        <ul>
+            <li><%= radio_button f, :q_4, "a" %>
+            <label>Information on how many relations you have.</label></li>
+            <li><%= radio_button f, :q_4, "b" %>
+            <label>Buttons to accept relation proposals from other participants.</label></li>
+            <li><%= radio_button f, :q_4, "c" %>
+            <label>Information on the earnings of other participants.</label></li>
+            <li><%= radio_button f, :q_4, "d" %>
+            <label>Your earnings in the last round.</label></li>
+            <li><%= radio_button f, :q_4, "e" %>
+            <label>Buttons to zoom into and out of the network.</label></li>
+        </ul>
+        <%= error_tag f, :q_4 %>
+    </fieldset>
+
+    <fieldset> 
+        <div style="">
+            <%= submit "Continue", id: "read-instructions", class: "button" %>
+        </div>
+    </fieldset>
+
+    <% end %>
+
+    </section>
+
+</div>
