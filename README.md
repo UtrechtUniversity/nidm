@@ -72,7 +72,7 @@ A quick note on this seemingly cumbersome procedure with the access tokens: sinc
 
 For the trials we have used the prolific ids. People had to register at Prolific to participate. After registration we added their prolific ids to the generated token file and imported that file before a trial on the production server. A valid url looks like this:
 ```
-http://localhost:4000/welcome?prolific_pid=542bdb6dfdf99b324ea37c3a
+http://https://nidm.onrender.com/welcome?prolific_pid=542bdb6dfdf99b324ea37c3a
 ```
 Valid urls trigger the session controller which, after verification subjects were led to the risk assessment controller in which they are presented a small number of questions that will calculate a personal risk profile, denoted by an simple numerical score. After the assessment people are added to a waiting queue (`lib/nidm/gen_servers/gate.ex`) and redirected to the wait-live-controller. On the wait page they can see how many people have entered the system. When there are enough subjects to occupy a network (60 in total), the group gets positions in a network, a network monitor is started (`lib/nidm/gen_servers/network_monitor.ex`) to supervise the game and one node gets infected. From then on, subjects will play the game in the game-live-controller. After the game has reached its end state, people are redirected to the exit controller in which they receive their completion code that enabled them to get paid on Prolific. 
 
